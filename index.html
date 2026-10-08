@@ -316,6 +316,11 @@ footer p + p{margin-top:8px}
           <div class="input"><span class="pre">+91</span><input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit number" maxlength="14" required></div>
           <p class="err" role="alert">Enter a valid 10-digit mobile number.</p>
         </div>
+        <div class="field" id="fLoc">
+          <label for="loc">Your location</label>
+          <div class="input"><input id="loc" name="location" type="text" autocomplete="address-level2" placeholder="Area, for example KPHB or Miyapur" maxlength="80"></div>
+          <p class="err" role="alert">Enter your area so we can plan the home visit.</p>
+        </div>
         <label class="home"><input type="checkbox" name="home" id="home">I need a home visit</label>
 
         <div class="hp" aria-hidden="true"><label>Company<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
@@ -589,13 +594,17 @@ footer p + p{margin-top:8px}
     var phone = cleanPhone(form.phone.value);
     var area = (radios.filter(function(r){return r.checked;})[0] || {}).value || '';
     var home = form.home.checked;
+    var loc = form.location.value.trim();
     var okName = name.length >= 2;
     var okPhone = /^[6-9]\d{9}$/.test(phone);
     setBad('#fName', !okName);
+    var okLoc = !home || loc.length >= 2;      // location is needed only for a home visit
     setBad('#fPhone', !okPhone);
+    setBad('#fLoc', !okLoc);
     $('#areaErr').classList.toggle('on', !area);
     if (!okName) return form.name.focus();
     if (!okPhone) return form.phone.focus();
+    if (!okLoc) return form.location.focus();
     if (!area) return $('#areas input').focus();
     if (form.company.value) return;          // honeypot: bots fill this
 
@@ -605,6 +614,7 @@ footer p + p{margin-top:8px}
       name: name,
       phone: phone,
       area: area,
+      location: loc,
       homeVisit: home ? 'Yes' : 'No',
       page: location.origin + location.pathname
     };
@@ -621,13 +631,13 @@ footer p + p{margin-top:8px}
         if (!CONFIG.sheetUrl) console.info('[lead] sheetUrl not set, lead not saved:', payload);
         track('track', 'Lead', { content_name: 'Miyapur consultation', content_category: area });
         $('#doneTitle').textContent = 'Request received, ' + name.split(' ')[0];
-        $('#doneWa').href = waLink('Hi, I am ' + name + '. I need help with: ' + area.toLowerCase() + (home ? ' (home visit)' : '') + '. I would like to book a consultation at Trivas Neuron, ' + CONFIG.branch + '. My number is ' + phone + '.');
+        $('#doneWa').href = waLink('Hi, I am ' + name + '. I need help with: ' + area.toLowerCase() + (home ? ' (home visit)' : '') + (loc ? '. I am in ' + loc : '') + '. I would like to book a consultation at Trivas Neuron, ' + CONFIG.branch + '. My number is ' + phone + '.');
         $('#book-card').classList.add('sent');
         var d = $('#done'); d.focus({preventScroll:true});
         d.scrollIntoView({behavior:'smooth', block:'center'});
       });
   });
-  ['#name','#phone'].forEach(function(s){
+  ['#name','#phone','#loc'].forEach(function(s){
     $(s).addEventListener('input', function(){ this.closest('.field').classList.remove('bad'); });
   });
 })();
