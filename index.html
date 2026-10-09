@@ -111,6 +111,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .card .btn{width:100%;margin-top:16px}
 .fine{margin-top:10px;font-size:.8125rem;color:var(--muted);text-align:center}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.gate{margin:0 0 14px;padding:12px 14px;border-radius:16px;background:rgba(214,96,40,.12);border:1px solid rgba(214,96,40,.4);color:#7a3512;font-weight:600;font-size:.95rem;line-height:1.4}
 .done{display:none;padding:6px 2px 2px}
 .done h2{font-size:1.6rem}
 .done p{margin-top:8px;color:var(--muted)}
@@ -265,7 +266,7 @@ footer p + p{margin-top:8px}
       <img src="assets/logo.jpg" width="96" height="96" alt="">
       <div><b>Trivas Neuron</b><span>Chiropractic &amp; Wellness Center</span></div>
     </a>
-    <a class="call" href="tel:+918520912340" data-track="call-top">
+    <a class="call" href="tel:+918520912341" data-track="call-top">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>
       Call now
     </a>
@@ -289,6 +290,7 @@ footer p + p{margin-top:8px}
 
     <div class="card glass" id="book-card">
       <form id="book" novalidate autocomplete="on">
+        <p class="gate" id="gateMsg" role="status" hidden>Please fill in this form first. Once you send it, the Call and WhatsApp buttons open straight away.</p>
         <h2>Book your consultation</h2>
         <p class="sub">Tell us what you need help with and add your number. We call to confirm a time.</p>
 
@@ -333,7 +335,7 @@ footer p + p{margin-top:8px}
         <h2 id="doneTitle">Request received</h2>
         <p>Our Trivas Neuron team will call you shortly to confirm your time. For a faster reply, message us now.</p>
         <a class="btn wa" id="doneWa" href="#" target="_blank" rel="noopener">Message us on WhatsApp</a>
-        <a class="btn ghost" href="tel:+918520912340" data-track="call-done">Call 85209 12340</a>
+        <a class="btn ghost" href="tel:+918520912341" data-track="call-done">Call 85209 12341</a>
       </div>
     </div>
   </div>
@@ -468,7 +470,7 @@ footer p + p{margin-top:8px}
           <div><b>Timings</b><span>Call us and we will confirm a slot that suits you.</span></div>
         </address>
         <div class="actions">
-          <a class="btn" href="tel:+918520912340" data-track="call-visit-btn">Call the centre</a>
+          <a class="btn" href="tel:+918520912341" data-track="call-visit-btn">Call the centre</a>
           <a class="btn wa" data-wa href="#" target="_blank" rel="noopener">WhatsApp us</a>
           <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=Trivas+Neuron+Physiotherapy+Miyapur+Hyderabad" target="_blank" rel="noopener">Get directions</a>
         </div>
@@ -514,7 +516,7 @@ footer p + p{margin-top:8px}
 </footer>
 
 <nav class="bar glass" aria-label="Quick actions">
-  <a class="c" href="tel:+918520912340" data-track="call-bar">
+  <a class="c" href="tel:+918520912341" data-track="call-bar">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>Call</a>
   <a class="w" data-wa href="#" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.2 13.9c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.7-1.2-4.4-3.9-4.5-4.1-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.4-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.3.1.8-.1 1.4z"/></svg>WhatsApp</a>
@@ -549,11 +551,27 @@ footer p + p{margin-top:8px}
     a.href = waLink(home
       ? 'Hi, I would like to ask about a home visit from Trivas Neuron, ' + CONFIG.branch + '.'
       : 'Hi, I would like to book a consultation at Trivas Neuron, ' + CONFIG.branch + '.');
-    a.addEventListener('click', function(){ track('track', 'Contact', {method:'whatsapp'}); });
   });
-  $$('[data-track^="call"]').forEach(function(a){
-    a.addEventListener('click', function(){ track('track', 'Contact', {method:'call'}); });
-  });
+
+  /* ---- Every Call and WhatsApp button asks for the form first ----
+     Until the visitor has sent the form in this session, a tap on any call or WhatsApp link
+     scrolls to the form instead. After submitting, the buttons work normally. */
+  var leadDone = false;
+  try { leadDone = sessionStorage.getItem('tn_lead') === '1'; } catch(e){}
+  function askForForm(method){
+    var card = $('#book-card');
+    $('#gateMsg').hidden = false;
+    track('trackCustom', 'ContactIntent', { method: method });
+    card.scrollIntoView({ behavior: smooth, block: 'start' });
+    setTimeout(function(){ var n = $('#name'); if (n) n.focus({ preventScroll: true }); }, 450);
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('a[href^="tel:"], a[data-wa], a[href^="https://wa.me"]') : null;
+    if (!a) return;
+    var method = (a.hasAttribute('data-wa') || /wa\.me/.test(a.href)) ? 'whatsapp' : 'call';
+    if (!leadDone && !a.closest('#done')) { e.preventDefault(); askForForm(method); return; }
+    track('track', 'Contact', { method: method });
+  }, true);
 
   var smooth = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
   var radios = $$('input[name="area"]');
@@ -632,6 +650,9 @@ footer p + p{margin-top:8px}
         track('track', 'Lead', { content_name: 'Miyapur consultation' });
         $('#doneTitle').textContent = 'Request received, ' + name.split(' ')[0];
         $('#doneWa').href = waLink('Hi, I am ' + name + '. I need help with: ' + area.toLowerCase() + (home ? ' (home visit)' : '') + (loc ? '. I am in ' + loc : '') + '. I would like to book a consultation at Trivas Neuron, ' + CONFIG.branch + '. My number is ' + phone + '.');
+        leadDone = true;
+        try { sessionStorage.setItem('tn_lead', '1'); } catch(e){}
+        $('#gateMsg').hidden = true;
         $('#book-card').classList.add('sent');
         var d = $('#done'); d.focus({preventScroll:true});
         d.scrollIntoView({behavior:'smooth', block:'center'});
