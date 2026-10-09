@@ -527,7 +527,7 @@ footer p + p{margin-top:8px}
   var CONFIG = {
     sheetUrl: 'https://script.google.com/macros/s/AKfycbzBDOVIGi2kLADs-8D2ACw7hsv1CWdJXhmYm1sa-ffQ8EGzT3SMP_vK9PizOHYqtiVV/exec',   // Google Apps Script web app (writes to the Trivas Neuron Leads sheet)
     whatsappNumber: '918520912340',
-    pixelId: '',                  // Meta Pixel ID, for example '123456789012345'
+    pixelId: '1813556140091656',                  // Meta Pixel ID, for example '123456789012345'
     branch: 'Miyapur'
   };
 
@@ -629,7 +629,7 @@ footer p + p{margin-top:8px}
     send.catch(function(){ /* network failure: still show the WhatsApp fallback below */ })
       .then(function(){
         if (!CONFIG.sheetUrl) console.info('[lead] sheetUrl not set, lead not saved:', payload);
-        track('track', 'Lead', { content_name: 'Miyapur consultation', content_category: area });
+        track('track', 'Lead', { content_name: 'Miyapur consultation' });
         $('#doneTitle').textContent = 'Request received, ' + name.split(' ')[0];
         $('#doneWa').href = waLink('Hi, I am ' + name + '. I need help with: ' + area.toLowerCase() + (home ? ' (home visit)' : '') + (loc ? '. I am in ' + loc : '') + '. I would like to book a consultation at Trivas Neuron, ' + CONFIG.branch + '. My number is ' + phone + '.');
         $('#book-card').classList.add('sent');
