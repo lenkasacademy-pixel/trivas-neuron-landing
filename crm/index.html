@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trivas Neuron CRM</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#E4F3F6">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+<style>
+@font-face{font-family:"Inter";src:url("../assets/fonts/Inter-400.woff2") format("woff2");font-weight:400 500;font-display:swap}
+@font-face{font-family:"Inter";src:url("../assets/fonts/Inter-700.woff2") format("woff2");font-weight:600 800;font-display:swap}
+:root{
+  --ink:#16203d;--muted:#53607a;--blue:#1F2E7A;--blue-d:#16225D;--blue-l:#DDF1F2;--line:rgba(29,29,31,.1);
+  --glass:rgba(255,255,255,.76);--stroke:rgba(255,255,255,.92);--blur:18px;
+  --shadow:0 18px 44px rgba(31,46,122,.14),0 1px 0 rgba(255,255,255,.9) inset;
+  --good:#1a7f45;--warn:#a85a00;--bad:#b3261e;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light;
+}
+@media (min-width:720px){:root{--blur:28px}}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:400 1rem/1.5 var(--font);color:var(--ink);background:#E9F1F7;min-height:100vh}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:3px solid #EE6A3D;outline-offset:2px;border-radius:8px}
+
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(165deg,#E4F3F6 0%,#EDEEFA 55%,#FBEFE9 100%)}
+.bg i{position:absolute;border-radius:50%;filter:blur(64px);opacity:.8}
+.bg .b1{width:420px;height:420px;left:-130px;top:-90px;background:#9ADCDD}
+.bg .b2{width:380px;height:380px;right:-120px;top:32vh;background:#BFC6F1}
+.bg .b3{width:400px;height:400px;left:14vw;bottom:-140px;background:#FAD3BA}
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.5);backdrop-filter:blur(var(--blur)) saturate(1.5);border:1px solid var(--stroke);border-radius:24px;box-shadow:var(--shadow)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:rgba(255,255,255,.95)}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:0 16px;border:0;border-radius:14px;background:linear-gradient(180deg,#2B3F9B,var(--blue));color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;text-decoration:none;box-shadow:0 8px 18px rgba(31,46,122,.28)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:rgba(255,255,255,.8);color:var(--blue-d);box-shadow:inset 0 0 0 1.5px rgba(31,46,122,.35)}
+.btn.wa{background:linear-gradient(180deg,#1BA25A,#128C4A);box-shadow:0 8px 18px rgba(18,140,74,.25)}
+.btn.sm{min-height:36px;padding:0 12px;font-size:.875rem;border-radius:12px}
+.btn[disabled]{opacity:.6;cursor:progress}
+
+/* Lock screen */
+.lock{max-width:380px;margin:12vh auto 0;padding:28px 24px;text-align:center}
+.lock img{height:72px;width:72px;border-radius:50%;margin:0 auto 12px;mix-blend-mode:multiply}
+.lock h1{font-size:1.5rem}
+.lock p{color:var(--muted);margin:8px 0 18px}
+.pin{width:100%;height:54px;border-radius:16px;border:1px solid rgba(29,29,31,.16);background:rgba(255,255,255,.95);text-align:center;font-weight:700;font-size:1.3rem;letter-spacing:.3em}
+.pin:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(31,46,122,.16)}
+.lock .btn{width:100%;margin-top:12px;min-height:50px}
+.err{color:var(--bad);font-weight:600;font-size:.9rem;min-height:1.3em;margin-top:10px}
+
+/* App */
+.wrap{max-width:1180px;margin:0 auto;padding:12px 14px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px 8px 16px;position:sticky;top:8px;z-index:20}
+.top .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 auto}
+.top .acts{flex:0 0 auto}
+.top img{height:40px;width:40px;border-radius:50%;mix-blend-mode:multiply}
+.top h1{font-size:1.05rem;white-space:nowrap}
+.top small{color:var(--muted);display:block;font-size:.75rem;font-weight:500}
+.top .acts{display:flex;gap:6px}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.kpi{padding:14px 16px;text-align:left;cursor:pointer;border-radius:20px}
+.kpi b{display:block;font-size:1.8rem;line-height:1;letter-spacing:-.03em;color:var(--blue)}
+.kpi span{display:block;margin-top:5px;font-size:.85rem;color:var(--muted)}
+.kpi.on{outline:2px solid var(--blue)}
+.kpi.alert b{color:var(--bad)}
+.tools{margin-top:12px;padding:12px;display:grid;gap:8px;grid-template-columns:1fr 1fr}
+.tools input[type=search]{grid-column:1/-1}
+.tools input,.tools select{height:42px;border-radius:12px;border:1px solid rgba(29,29,31,.14);background:rgba(255,255,255,.92);padding:0 12px;min-width:0}
+.seg{grid-column:1/-1;display:flex;gap:6px}
+.seg button{flex:1;min-height:38px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.75);font-weight:600;cursor:pointer}
+.seg button[aria-pressed=true]{background:linear-gradient(180deg,#2B3F9B,var(--blue));color:#fff;border-color:transparent}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:20px 4px 8px}
+.sec-h h2{font-size:1.15rem}
+.sec-h span{color:var(--muted);font-size:.85rem}
+.empty{padding:26px;text-align:center;color:var(--muted)}
+.grid{display:grid;gap:10px}
+
+/* Lead card */
+.lead{padding:14px 14px 12px;border-radius:22px}
+.lead.due{box-shadow:0 0 0 2px rgba(179,38,30,.35),var(--shadow)}
+.l-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.l-name{font-weight:700;font-size:1.05rem;word-break:break-word}
+.l-sub{color:var(--muted);font-size:.8rem}
+.pill{flex:none;padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:700;white-space:nowrap}
+.s-New{background:#DDF1F2;color:#0E7A80}.s-Contacted{background:#E8E1FA;color:#4a2fa0}
+.s-Appointment-booked{background:#FDEBC8;color:#8a5200}.s-Visited{background:#D5F1EC;color:#0b6b5c}
+.s-Treatment-started{background:#D3F0DC;color:#136b38}.s-Not-interested{background:#E6E8EB;color:#555d66}
+.l-phone{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.l-phone b{font-size:1.1rem;letter-spacing:.01em;margin-right:4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.85);border:1px solid var(--line);font-size:.78rem;font-weight:600}
+.l-ctl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.l-ctl label{font-size:.72rem;font-weight:700;color:var(--muted);display:block;margin-bottom:3px}
+.l-ctl select,.l-ctl input,.l-ctl textarea{width:100%;border-radius:12px;border:1px solid rgba(29,29,31,.14);background:rgba(255,255,255,.95);padding:8px 10px;min-height:40px}
+.l-ctl textarea{grid-column:1/-1;min-height:64px;resize:vertical}
+.l-ctl .full{grid-column:1/-1}
+.l-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+.l-foot details{font-size:.8rem;color:var(--muted);min-width:0}
+.l-foot summary{cursor:pointer;font-weight:600}
+.l-foot pre{margin:6px 0 0;white-space:pre-wrap;font:inherit;font-size:.78rem}
+.linkbtn{background:none;border:0;color:var(--bad);font-weight:600;font-size:.8rem;cursor:pointer;padding:6px 0}
+
+/* Pipeline board */
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:10px;overflow-x:auto;padding-bottom:10px}
+.col{padding:10px;border-radius:20px;min-height:140px}
+.col h3{font-size:.9rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.col h3 em{font-style:normal;font-size:.75rem;color:var(--muted)}
+.mini{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:14px;padding:9px 10px;margin-bottom:8px}
+.mini b{display:block;font-size:.92rem;word-break:break-word}
+.mini small{color:var(--muted)}
+.mini .row{display:flex;gap:6px;margin-top:6px}
+
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1d1d1f;color:#fff;padding:10px 16px;border-radius:14px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw}
+#toast.on{opacity:1}
+#toast.bad{background:var(--bad)}
+
+@media (max-width:480px){.top img{display:none}.top{padding-left:14px}}
+@media (min-width:640px){.kpis{grid-template-columns:repeat(4,1fr)}.tools{grid-template-columns:2fr 1fr 1fr 1fr auto}.tools input[type=search]{grid-column:auto}.seg{grid-column:auto}}
+@media (min-width:900px){.wrap{padding:18px 24px 80px}.grid{grid-template-columns:1fr 1fr}.top{top:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+
+<main id="lock" class="lock glass">
+  <img src="../assets/logo.jpg" alt="Trivas Neuron" width="96" height="96">
+  <h1>Trivas Neuron CRM</h1>
+  <p>Enter the PIN to see your leads.</p>
+  <form id="pin-form" autocomplete="off">
+    <input class="pin" id="pin" type="password" maxlength="24" aria-label="PIN" placeholder="PIN" required>
+    <button class="btn" id="pin-btn" type="submit">Open</button>
+    <div class="err" id="pin-err" role="alert"></div>
+  </form>
+</main>
+
+<div id="app" class="wrap" hidden>
+  <header class="top glass">
+    <div class="brand">
+      <img src="../assets/logo.jpg" alt="Trivas Neuron" width="96" height="96">
+      <div><h1>Leads</h1><small id="stamp">Loading</small></div>
+    </div>
+    <div class="acts">
+      <button class="btn ghost sm" id="refresh" type="button">Refresh</button>
+      <button class="btn ghost sm" id="export" type="button">CSV</button>
+      <button class="btn ghost sm" id="lockbtn" type="button">Lock</button>
+    </div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="Summary"></section>
+
+  <section class="tools glass" aria-label="Filters">
+    <input type="search" id="q" placeholder="Search name, phone, note" aria-label="Search">
+    <select id="f-stage" aria-label="Stage"></select>
+    <select id="f-area" aria-label="Needs help with"></select>
+    <select id="f-range" aria-label="Received">
+      <option value="all">All time</option><option value="today">Today</option>
+      <option value="7">Last 7 days</option><option value="30">Last 30 days</option>
+    </select>
+    <div class="seg" role="group" aria-label="View">
+      <button type="button" id="v-list" aria-pressed="true">List</button>
+      <button type="button" id="v-board" aria-pressed="false">Pipeline</button>
+    </div>
+  </section>
+
+  <section id="focus-wrap" hidden>
+    <div class="sec-h"><h2>Call first</h2><span id="focus-n"></span></div>
+    <div class="grid" id="focus"></div>
+  </section>
+
+  <section id="list-wrap">
+    <div class="sec-h"><h2 id="list-h">All leads</h2><span id="list-n"></span></div>
+    <div class="grid" id="list"></div>
+  </section>
+
+  <section id="board-wrap" hidden>
+    <div class="sec-h"><h2>Pipeline</h2><span id="board-n"></span></div>
+    <div class="board" id="board"></div>
+  </section>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  'use strict';
+  var API = 'https://script.google.com/macros/s/AKfycbzBDOVIGi2kLADs-8D2ACw7hsv1CWdJXhmYm1sa-ffQ8EGzT3SMP_vK9PizOHYqtiVV/exec';
+  var CLOSED = ['Treatment started', 'Not interested'];
+  var $ = function(id){ return document.getElementById(id); };
+  var pin = '';
+  try { pin = sessionStorage.getItem('crmPin') || ''; } catch(e){}
+  var S = { leads: [], stages: [], events: {}, filter: { q:'', stage:'', area:'', range:'all', kpi:'' }, view: 'list' };
+  var dirty = {};            // lead id -> true while a card has unsaved edits
+
+  /* ---------- tiny DOM helper: text goes in as text, never as HTML ---------- */
+  function h(tag, attrs){
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function(k){
+      var v = attrs[k];
+      if (v === null || v === undefined || v === false) return;
+      if (k === 'class') el.className = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k.slice(0,2) === 'on') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      if (c === null || c === undefined || c === false) continue;
+      el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    }
+    return el;
+  }
+  function clear(el){ while (el.firstChild) el.removeChild(el.firstChild); }
+  function toast(msg, bad){
+    var t = $('toast'); t.textContent = msg; t.className = 'on' + (bad ? ' bad' : '');
+    clearTimeout(toast.t); toast.t = setTimeout(function(){ t.className = ''; }, 2600);
+  }
+
+  /* ---------- API: the PIN travels in the POST body, never in the URL ---------- */
+  function call(action, extra){
+    var body = { type: 'crm', pin: pin, action: action };
+    Object.keys(extra || {}).forEach(function(k){ body[k] = extra[k]; });
+    return fetch(API, { method: 'POST', body: JSON.stringify(body) }).then(function(r){ return r.json(); });
+  }
+  function showLock(msg){
+    pin = ''; try { sessionStorage.removeItem('crmPin'); } catch(e){}
+    $('app').hidden = true; $('lock').hidden = false;
+    $('pin-err').textContent = msg || ''; $('pin').value = ''; $('pin').focus();
+  }
+  function load(quiet){
+    return call('list').then(function(j){
+      if (j.badPin || j.locked) { showLock(j.error); return false; }
+      if (!j.ok) { if (!quiet) toast(j.error || 'Could not load leads', true); return false; }
+      S.leads = j.leads; S.stages = j.stages; S.events = j.events || {};
+      $('lock').hidden = true; $('app').hidden = false;
+      buildFilters(); render();
+      $('stamp').textContent = 'Updated ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      return true;
+    }).catch(function(err){ if (!quiet) toast('No connection. Try again.', true); return false; });
+  }
+
+  /* ---------- helpers ---------- */
+  function today(){ var d = new Date(); return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2); }
+  function dayOf(iso){ var d = new Date(iso); if (isNaN(d)) return ''; return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2); }
+  function rel(iso){
+    var d = new Date(iso); if (isNaN(d)) return '';
+    var m = Math.round((Date.now() - d.getTime()) / 60000);
+    if (m < 1) return 'just now'; if (m < 60) return m + ' min ago';
+    var hrs = Math.round(m / 60); if (hrs < 24) return hrs + ' h ago';
+    var days = Math.round(hrs / 24); if (days < 30) return days + ' d ago';
+    return d.toLocaleDateString([], { day: 'numeric', month: 'short' });
+  }
+  function fmtPhone(p){ p = String(p||''); return p.length === 10 ? p.slice(0,5) + ' ' + p.slice(5) : p; }
+  function slug(s){ return String(s).replace(/[^A-Za-z]+/g, '-'); }
+  function isDue(l){ return !!l.followup && l.followup <= today() && CLOSED.indexOf(l.status) < 0; }
+  function waUrl(l){
+    var first = String(l.name || '').trim().split(/\s+/)[0] || 'there';
+    var msg = 'Hi ' + first + ', this is Trivas Neuron Chiropractic & Wellness Center, Miyapur. You asked about ' + (l.area ? String(l.area).toLowerCase() : 'a consultation') + '. When would you like to visit?';
+    return 'https://wa.me/91' + String(l.phone).replace(/\D/g,'') + '?text=' + encodeURIComponent(msg);
+  }
+
+  /* ---------- filters ---------- */
+  function buildFilters(){
+    var st = $('f-stage'), ar = $('f-area'), cur = S.filter;
+    clear(st); st.appendChild(h('option', { value: '', text: 'All stages' }));
+    S.stages.forEach(function(s){ st.appendChild(h('option', { value: s, text: s })); });
+    var areas = {}; S.leads.forEach(function(l){ if (l.area) areas[l.area] = 1; });
+    clear(ar); ar.appendChild(h('option', { value: '', text: 'All needs' }));
+    Object.keys(areas).sort().forEach(function(a){ ar.appendChild(h('option', { value: a, text: a })); });
+    st.value = cur.stage; ar.value = cur.area;
+  }
+  function matches(l){
+    var f = S.filter;
+    if (f.stage && l.status !== f.stage) return false;
+    if (f.area && l.area !== f.area) return false;
+    if (f.range !== 'all') {
+      var day = dayOf(l.received);
+      if (f.range === 'today') { if (day !== today()) return false; }
+      else { var since = new Date(Date.now() - Number(f.range) * 86400000); if (new Date(l.received) < since) return false; }
+    }
+    if (f.kpi === 'new') { if (dayOf(l.received) !== today()) return false; }
+    if (f.kpi === 'due') { if (!isDue(l)) return false; }
+    if (f.kpi === 'booked') { if (l.status !== 'Appointment booked') return false; }
+    if (f.q) {
+      var hay = (l.name + ' ' + l.phone + ' ' + l.notes + ' ' + l.location + ' ' + l.area).toLowerCase();
+      if (hay.indexOf(f.q.toLowerCase()) < 0) return false;
+    }
+    return true;
+  }
+  function filtersActive(){ var f = S.filter; return !!(f.q || f.stage || f.area || f.range !== 'all' || f.kpi); }
+
+  /* ---------- render ---------- */
+  function kpi(label, n, key, alert){
+    var on = S.filter.kpi === key;
+    return h('button', { type: 'button', class: 'kpi glass' + (on ? ' on' : '') + (alert && n ? ' alert' : ''), 'aria-pressed': on ? 'true' : 'false',
+      onclick: function(){ S.filter.kpi = on ? '' : key; render(); } }, h('b', { text: String(n) }), h('span', { text: label }));
+  }
+  function render(){
+    var L = S.leads, t = today();
+    var kp = $('kpis'); clear(kp);
+    kp.appendChild(kpi('New today', L.filter(function(l){ return dayOf(l.received) === t; }).length, 'new'));
+    kp.appendChild(kpi('Follow-ups due', L.filter(isDue).length, 'due', true));
+    kp.appendChild(kpi('Appointments booked', L.filter(function(l){ return l.status === 'Appointment booked'; }).length, 'booked'));
+    kp.appendChild(kpi('Total leads', L.length, ''));
+
+    var shown = L.filter(matches);
+    var useFocus = S.view === 'list' && !filtersActive();
+    var focus = useFocus ? L.filter(function(l){ return l.status === 'New' || isDue(l); }) : [];
+    focus.sort(function(a, b){ return (isDue(b) ? 1 : 0) - (isDue(a) ? 1 : 0); });
+    $('focus-wrap').hidden = !focus.length;
+    $('focus-n').textContent = focus.length + ' to call';
+    fill($('focus'), focus);
+
+    $('list-wrap').hidden = S.view !== 'list';
+    $('board-wrap').hidden = S.view !== 'board';
+    var inFocus = {}; focus.forEach(function(l){ inFocus[l.id] = true; });
+    var rest = shown.filter(function(l){ return !inFocus[l.id]; });
+    $('list-h').textContent = filtersActive() ? 'Matching leads' : (focus.length ? 'Other leads' : 'All leads');
+    $('list-n').textContent = rest.length + (rest.length === 1 ? ' lead' : ' leads');
+    $('list-wrap').hidden = S.view !== 'list' || (!rest.length && focus.length > 0);
+    if (S.view === 'list') fill($('list'), rest);
+    else drawBoard(shown);
+  }
+  function fill(box, leads){
+    clear(box);
+    if (!leads.length) { box.appendChild(h('div', { class: 'empty glass', text: S.leads.length ? 'No leads match.' : 'No leads yet. New form submissions show up here.' })); return; }
+    leads.forEach(function(l){ box.appendChild(card(l)); });
+  }
+
+  function card(l){
+    var stageSel = h('select', { id: 's-' + l.id, 'aria-label': 'Stage for ' + l.name });
+    S.stages.forEach(function(s){ stageSel.appendChild(h('option', { value: s, text: s })); });
+    stageSel.value = l.status;
+    var fu = h('input', { type: 'date', value: l.followup || '', 'aria-label': 'Follow-up date' });
+    var note = h('textarea', { 'aria-label': 'Note', placeholder: 'Note, for example: call after 6 PM', maxlength: '500' });
+    note.value = l.notes || '';
+    var save = h('button', { type: 'button', class: 'btn sm', text: 'Save note and date', hidden: true });
+    function markDirty(){ dirty[l.id] = true; save.hidden = false; }
+    fu.addEventListener('input', markDirty); note.addEventListener('input', markDirty);
+    save.addEventListener('click', function(){
+      save.disabled = true;
+      call('update', { id: l.id, notes: note.value, followup: fu.value }).then(function(j){
+        save.disabled = false;
+        if (j.badPin || j.locked) return showLock(j.error);
+        if (!j.ok) return toast(j.error || 'Not saved', true);
+        l.notes = note.value; l.followup = fu.value; delete dirty[l.id]; save.hidden = true;
+        toast('Saved'); render();
+      }).catch(function(){ save.disabled = false; toast('No connection. Not saved.', true); });
+    });
+    stageSel.addEventListener('change', function(){ setStage(l, stageSel.value, stageSel); });
+
+    var chips = h('div', { class: 'chips' },
+      l.area && h('span', { class: 'chip', text: l.area }),
+      l.home && h('span', { class: 'chip', text: 'Home visit' }),
+      l.location && h('span', { class: 'chip', text: l.location }),
+      (l.campaign || l.source) && h('span', { class: 'chip', text: l.campaign || l.source }),
+      isDue(l) && h('span', { class: 'chip', style: 'color:#b3261e;border-color:rgba(179,38,30,.4)', text: 'Follow-up due' }));
+
+    return h('article', { class: 'lead glass' + (isDue(l) ? ' due' : '') },
+      h('div', { class: 'l-top' },
+        h('div', null, h('div', { class: 'l-name', text: l.name }), h('div', { class: 'l-sub', text: 'Received ' + rel(l.received) + (l.updated ? ' | edited ' + l.updated : '') })),
+        h('span', { class: 'pill s-' + slug(l.status), text: l.status })),
+      h('div', { class: 'l-phone' },
+        h('b', { text: fmtPhone(l.phone) }),
+        h('a', { class: 'btn sm', href: 'tel:+91' + l.phone, text: 'Call' }),
+        h('a', { class: 'btn sm wa', href: waUrl(l), target: '_blank', rel: 'noopener', text: 'WhatsApp' }),
+        h('button', { type: 'button', class: 'btn sm ghost', text: 'Copy', onclick: function(){
+          if (navigator.clipboard) navigator.clipboard.writeText(l.phone).then(function(){ toast('Number copied'); }); } })),
+      chips,
+      h('div', { class: 'l-ctl' },
+        h('div', null, h('label', { for: 's-' + l.id, text: 'Stage' }), stageSel),
+        h('div', null, h('label', { text: 'Follow-up' }), fu),
+        h('div', { class: 'full' }, h('label', { text: 'Note' }), note),
+        h('div', { class: 'full' }, save)),
+      h('div', { class: 'l-foot' },
+        h('span'),
+        h('button', { type: 'button', class: 'linkbtn', text: 'Delete', onclick: function(){ del(l); } })));
+  }
+
+  function setStage(l, stage, sel){
+    var before = l.status;
+    if (before === stage) return;
+    sel.disabled = true;
+    call('update', { id: l.id, status: stage }).then(function(j){
+      sel.disabled = false;
+      if (j.badPin || j.locked) return showLock(j.error);
+      if (!j.ok) { sel.value = before; return toast(j.error || 'Not saved', true); }
+      l.status = stage;
+      toast('Saved');
+      load(true);
+    }).catch(function(){ sel.disabled = false; sel.value = before; toast('No connection. Not saved.', true); });
+  }
+  function del(l){
+    if (!window.confirm('Delete ' + l.name + ' (' + fmtPhone(l.phone) + ') from the sheet? This cannot be undone.')) return;
+    call('delete', { id: l.id }).then(function(j){
+      if (j.badPin || j.locked) return showLock(j.error);
+      if (!j.ok) return toast(j.error || 'Not deleted', true);
+      S.leads = S.leads.filter(function(x){ return x.id !== l.id; }); toast('Deleted'); render();
+    }).catch(function(){ toast('No connection. Not deleted.', true); });
+  }
+
+  function drawBoard(leads){
+    var box = $('board'); clear(box);
+    $('board-n').textContent = leads.length + ' leads';
+    S.stages.forEach(function(stage, i){
+      var inCol = leads.filter(function(l){ return l.status === stage; });
+      var col = h('div', { class: 'col glass' }, h('h3', null, h('span', { class: 'pill s-' + slug(stage), text: stage }), h('em', { text: String(inCol.length) })));
+      inCol.forEach(function(l){
+        var next = S.stages[i + 1] && stage !== 'Treatment started' ? (stage === 'Not interested' ? '' : S.stages[i + 1]) : '';
+        if (next === 'Not interested') next = '';
+        col.appendChild(h('div', { class: 'mini' },
+          h('b', { text: l.name }), h('small', { text: [fmtPhone(l.phone), l.area, rel(l.received)].filter(Boolean).join(' | ') }),
+          h('div', { class: 'row' },
+            h('a', { class: 'btn sm', href: 'tel:+91' + l.phone, text: 'Call' }),
+            next && h('button', { type: 'button', class: 'btn sm ghost', text: 'To ' + next, onclick: function(ev){ setStage(l, next, ev.target); } }))));
+      });
+      box.appendChild(col);
+    });
+  }
+
+  /* ---------- CSV ---------- */
+  function csv(){
+    var rows = [['Received','Name','Phone','Needs help with','Home visit','Location','Campaign','Source','Stage','Follow-up','Note']];
+    S.leads.filter(matches).forEach(function(l){ rows.push([l.received, l.name, l.phone, l.area, l.home ? 'Yes' : 'No', l.location, l.campaign, l.source, l.status, l.followup, l.notes]); });
+    var text = rows.map(function(r){ return r.map(function(c){
+      c = String(c == null ? '' : c); if (/^[=+\-@]/.test(c)) c = "'" + c;
+      return '"' + c.replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
+    var a = h('a', { href: URL.createObjectURL(new Blob([text], { type: 'text/csv' })), download: 'trivas-neuron-leads-' + today() + '.csv' });
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  /* ---------- wiring ---------- */
+  $('pin-form').addEventListener('submit', function(e){
+    e.preventDefault(); pin = $('pin').value.trim(); if (!pin) return;
+    $('pin-btn').disabled = true; $('pin-err').textContent = '';
+    load(false).then(function(ok){
+      $('pin-btn').disabled = false;
+      if (ok) { try { sessionStorage.setItem('crmPin', pin); } catch(x){} }
+    });
+  });
+  $('q').addEventListener('input', function(){ S.filter.q = this.value.trim(); render(); });
+  $('f-stage').addEventListener('change', function(){ S.filter.stage = this.value; render(); });
+  $('f-area').addEventListener('change', function(){ S.filter.area = this.value; render(); });
+  $('f-range').addEventListener('change', function(){ S.filter.range = this.value; render(); });
+  function setView(v){
+    S.view = v; $('v-list').setAttribute('aria-pressed', String(v === 'list')); $('v-board').setAttribute('aria-pressed', String(v === 'board')); render();
+  }
+  $('v-list').addEventListener('click', function(){ setView('list'); });
+  $('v-board').addEventListener('click', function(){ setView('board'); });
+  $('refresh').addEventListener('click', function(){ load(false).then(function(ok){ if (ok) toast('Updated'); }); });
+  $('export').addEventListener('click', csv);
+  $('lockbtn').addEventListener('click', function(){ showLock(''); });
+  setInterval(function(){ if (pin && !document.hidden && !Object.keys(dirty).length) load(true); }, 90000);
+
+  if (pin) load(true).then(function(ok){ if (!ok) $('pin').focus(); }); else $('pin').focus();
+})();
+</script>
+</body>
+</html>
